@@ -66,6 +66,10 @@ class PySQL:
         self.sql = ''
         self.where_sql = ''
         self.join_sql = ''
+        self.order_by_sql = ''
+        self.group_by_sql = ''
+
+
         self.limit_sql = ''
 
 
@@ -134,6 +138,8 @@ class PySQL:
 
         self.__make_sql(self.join_sql)
         self.__make_sql(self.where_sql)
+        self.__make_sql(self.group_by_sql)
+        self.__make_sql(self.order_by_sql)
         self.__make_sql(self.limit_sql)
 
        
@@ -300,5 +306,40 @@ class PySQL:
         self.query_params.append(limit)
         self.limit_sql = ' LIMIT %s '
         return self
+
+
+    def __get_order_by_text(self,val):
+        """ Receives string e.g -id or name """
+
+        if val.startswith('-'):
+            return "{} DESC".format(self.__make_table_column(val[1:]))
+        else:
+            return "{} ASC".format(self.__make_table_column(val))
+
+
+
+    def order_by(self,order_by_fields):
+        """Expects list of fields e.g ['-id','name'] where - is DESC"""
+
+        order_by_sql = ','.join([self.__get_order_by_text(v) for v in order_by_fields])
+
+        if self.order_by_sql:
+            self.order_by_sql = self.order_by_sql + order_by_sql
+        else:
+            self.order_by_sql = " ORDER BY " + order_by_sql
+        return self
+    
+    def group_by(self,group_by_fields):
+        """ Expects fields in list ['id','name'] ... """
+
+        group_by_sql = ','.join([self.__make_table_column(v) for v in group_by_fields])
+
+        if self.group_by_sql:
+            self.group_by_sql = self.group_by_sql + group_by_sql
+        else:
+            self.group_by_sql = " GROUP BY " + group_by_sql
+            
+        return self
+
 
 
