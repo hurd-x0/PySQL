@@ -103,10 +103,7 @@ class PySQL:
 
     def fetch(self,limit=None):
         if not self.cursor:
-            self.__make_select_sql()
-
-            self.__limit(limit)
-               
+            self.__make_select_sql(limit=limit)
 
             print (self.sql)
             print (self.query_params)
@@ -118,7 +115,7 @@ class PySQL:
 
     def fetch_one(self):
         if not self.cursor:
-            self.__make_select_sql()
+            self.__make_select_sql(limit=None)
             self.cursor = self.execute(self.sql,self.query_params)
             
         result = self.cursor.fetchone()
@@ -135,18 +132,25 @@ class PySQL:
         if sql:
             self.sql = self.sql + sql
 
-    def __make_select_sql(self):
+    def __make_select_sql(self,limit):
         self.sql = "SELECT {} FROM {} ".format(self.get_columns(),self.table_name)
 
         self.__make_sql(self.join_sql)
         self.__make_sql(self.where_sql)
         self.__make_sql(self.group_by_sql)
         self.__make_sql(self.order_by_sql)
+        self.__limit(limit)
        
 
-    def __make_update_sql(self,update_sql):
+    def __make_update_sql(self,update_sql,limit):
         self.sql = "UPDATE {} SET {} ".format(self.table_name,update_sql)
         self.__make_sql(self.where_sql)
+        self.__limit(limit)
+
+    def __make_delete_sql(self,limit):
+        self.sql = "DELETE FROM {}  ".format(self.table_name)
+        self.__make_sql(self.where_sql)
+        self.__limit(limit)
        
 
        
@@ -410,22 +414,33 @@ class PySQL:
         filter_params = self.query_params
         self.query_params = []
         update_params = [v for k,v in  new_data.items()]
-        
+
         update_params.extend(filter_params) #we start with update thn filter
 
         self.__build_query_params(update_params)
 
 
-        self.__make_update_sql(col_set)
+        self.__make_update_sql(col_set,limit)
 
-        self.__limit(limit)
-        
+      
         print(self.query_params)
 
         print (self.sql)
 
        
         return self.execute(self.sql,self.query_params)
+
+    def delete(self,limit=None):
+        """ Delete with given limit """
+        self.__make_delete_sql(limit)
+
+        print (self.sql)
+        
+        return self.execute(self.sql,self.query_params)
+
+       
+
+
 
 
 

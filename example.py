@@ -60,5 +60,15 @@ db.commit()
 print (c.rowcount)
 
 
+""" Test deletes """
+
+filter_data={
+    "state":"closed",
+}
+c = db.requests.filter(filter_data).delete(limit=5)
+db.commit()
+
+print (c.rowcount)
+
 
 
