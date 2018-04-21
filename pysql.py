@@ -101,13 +101,15 @@ class PySQL:
         return self
 
 
-    def fetch_all(self):
+    def fetch(self,limit=None):
         if not self.cursor:
             self.__make_select_sql()
+
+            self.__limit(limit)
+               
+
             print (self.sql)
             print (self.query_params)
-
-
             self.cursor = self.execute(self.sql,self.query_params)
 
         results = self.cursor.fetchall()
@@ -140,7 +142,12 @@ class PySQL:
         self.__make_sql(self.where_sql)
         self.__make_sql(self.group_by_sql)
         self.__make_sql(self.order_by_sql)
-        self.__make_sql(self.limit_sql)
+       
+
+    def __make_update_sql(self,update_sql):
+        self.sql = "UPDATE {} SET {} ".format(self.table_name,update_sql)
+        self.__make_sql(self.where_sql)
+       
 
        
 
@@ -302,10 +309,11 @@ class PySQL:
        
         return self
     
-    def limit(self,limit):
-        self.query_params.append(limit)
-        self.limit_sql = ' LIMIT %s '
-        return self
+    def __limit(self,limit):
+        if limit:
+            self.__build_query_params(limit)
+            self.__make_sql(' LIMIT %s ')
+       
 
 
     def __get_order_by_text(self,val):
@@ -389,6 +397,36 @@ class PySQL:
         
         self.__make_join('LEFT JOIN',table_name,condition,related_fields)
         return self
+
+    def update(self,new_data,limit=None):
+        """ set this new data as new details
+        
+        Returns cursor object
+
+        """
+       
+        col_set = ','.join([" {} = %s ".format(k) for k,v in  new_data.items()])
+
+        filter_params = self.query_params
+        self.query_params = []
+        update_params = [v for k,v in  new_data.items()]
+        
+        update_params.extend(filter_params) #we start with update thn filter
+
+        self.__build_query_params(update_params)
+
+
+        self.__make_update_sql(col_set)
+
+        self.__limit(limit)
+        
+        print(self.query_params)
+
+        print (self.sql)
+
+       
+        return self.execute(self.sql,self.query_params)
+
 
 
 

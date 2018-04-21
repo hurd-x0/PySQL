@@ -30,14 +30,35 @@ filter_data={
     #"$xor":[{"event_id":3},{"event_id":{"$gte":5}},{"event_id":{"$null":False}}]
 }
 
-filtered_1  = db.requests.fields(['id','state','access_mode','event_id']).filter(filter_data).order_by(['-id','state']).group_by(['message']).fetch_all()
+filtered_1  = db.requests.fields(['id','state','access_mode','event_id']).filter(filter_data).order_by(['-id','state']).group_by(['message']).fetch(limit=8)
 
-filtered_2  = db.requests.fields(['id','state','access_mode','event_id']).inner_join('players',{"msisdn":"phone_number"},related_fields=['country_code']).filter(filter_data).order_by(['-id','state']).group_by(['message']).limit(4).fetch_all()
+#with joins
+filtered_2  = db.requests.fields(['id','state','access_mode','event_id']).inner_join('players',{"msisdn":"phone_number"},related_fields=['country_code']).filter(filter_data).order_by(['-id','state']).group_by(['message']).fetch(4)
 
 
 #print ([r for r in all_requests])
 
 #print ([r for r in with_cols])
 
-print ([r for r in filtered_1])
-print ([r for r in filtered_2])
+#print ([r for r in filtered_1])
+#print ([r for r in filtered_2])
+
+
+""" Test updates """
+
+filter_data={
+    "state":"open",
+}
+new_data ={
+    "state":"closed"
+}
+
+c = db.requests.filter(filter_data).update(new_data,limit=5)
+
+db.commit()
+
+print (c.rowcount)
+
+
+
+
