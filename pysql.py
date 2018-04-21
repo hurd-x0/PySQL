@@ -76,7 +76,7 @@ class PySQL:
         self.cursor = None
         return self
     
-    def __make_table_column(self,column):
+    def __make_table_column(self,column,table_name=None):
         """Example
         Input:  =>  Output:
 
@@ -86,7 +86,7 @@ class PySQL:
         """
         if '.' in column:
             return column
-        return "{}.{}".format(self.table_name,column)
+        return "{}.{}".format(table_name,column) if table_name else "{}.{}".format(self.table_name,column)
 
     def get_columns(self):
         return ','.join([self.__make_table_column(c)  for c in self.columns])
@@ -340,6 +340,56 @@ class PySQL:
             self.group_by_sql = " GROUP BY " + group_by_sql
             
         return self
+
+    def __make_join(self,join_type,table_name,condition_data,related_fields):
+        """ makes join sql based on type of join and tables """
+
+        on_sql = []
+
+        for k,v in condition_data.items():
+            on_sql.append("{} = {} ".format(self.__make_table_column(k),self.__make_table_column(v,table_name)))
+        on_sql_str = ' ON {} ' .format(' AND '.join(on_sql))
+        join_type_sql = '{} {} '.format(join_type,table_name)
+
+        self.join_sql = self.join_sql + join_type_sql + on_sql_str
+
+        #append the columns to select based on related fields
+        if related_fields:
+            self.columns.extend([self.__make_table_column(c,table_name) for c in related_fields])
+
+
+
+
+    def inner_join(self,table_name,condition,related_fields=None):
+        """ e.g Orders,{"id":"customer_id"}, ['quantity'] 
+         This will result to :
+
+         .... Orders.quantity, ....  INNER JOIN Orders ON Customers.id =  Orders.customer_id
+        """
+        
+        self.__make_join('INNER JOIN',table_name,condition,related_fields)
+        return self
+
+    def right_join(self,table_name,condition,related_fields=None):
+        """ e.g Orders,{"id":"customer_id"}, ['quantity'] 
+         This will result to :
+
+         .... Orders.quantity, ....  RIGHT JOIN Orders ON Customers.id =  Orders.customer_id
+        """
+        
+        self.__make_join('RIGHT JOIN',table_name,condition,related_fields)
+        return self
+            
+    def left_join(self,table_name,condition,related_fields=None):
+        """ e.g Orders,{"id":"customer_id"}, ['quantity'] 
+         This will result to :
+
+         .... Orders.quantity, ....  LEFT JOIN Orders ON Customers.id =  Orders.customer_id
+        """
+        
+        self.__make_join('LEFT JOIN',table_name,condition,related_fields)
+        return self
+
 
 
 

@@ -32,9 +32,12 @@ filter_data={
 
 filtered_1  = db.requests.fields(['id','state','access_mode','event_id']).filter(filter_data).order_by(['-id','state']).group_by(['message']).fetch_all()
 
+filtered_2  = db.requests.fields(['id','state','access_mode','event_id']).inner_join('players',{"msisdn":"phone_number"},related_fields=['country_code']).filter(filter_data).order_by(['-id','state']).group_by(['message']).limit(4).fetch_all()
+
 
 #print ([r for r in all_requests])
 
 #print ([r for r in with_cols])
 
 print ([r for r in filtered_1])
+print ([r for r in filtered_2])
