@@ -142,20 +142,6 @@ class PySQL:
         self.__limit(limit)
        
 
-    def __make_update_sql(self,update_sql,limit):
-        self.sql = "UPDATE {} SET {} ".format(self.table_name,update_sql)
-        self.__make_sql(self.where_sql)
-        self.__limit(limit)
-
-    def __make_delete_sql(self,limit):
-        self.sql = "DELETE FROM {}  ".format(self.table_name)
-        self.__make_sql(self.where_sql)
-        self.__limit(limit)
-       
-
-       
-
-
     def __make_filter(self,k,v):
         #check if val is dict
        
@@ -420,7 +406,9 @@ class PySQL:
         self.__build_query_params(update_params)
 
 
-        self.__make_update_sql(col_set,limit)
+        self.sql = "UPDATE {} SET {} ".format(self.table_name,col_set)
+        self.__make_sql(self.where_sql)
+        self.__limit(limit)
 
       
         print(self.query_params)
@@ -432,11 +420,43 @@ class PySQL:
 
     def delete(self,limit=None):
         """ Delete with given limit """
-        self.__make_delete_sql(limit)
+
+        self.sql = "DELETE FROM {}  ".format(self.table_name)
+        self.__make_sql(self.where_sql)
+        self.__limit(limit)
 
         print (self.sql)
-        
+
         return self.execute(self.sql,self.query_params)
+
+
+    def insert(self,data):
+    
+        """
+         Creates records to db table . Expects a dict of key abd values pair
+        
+        """
+
+        columns = []
+
+        params = []
+
+        for k,v in data.items():
+            columns.append(k)
+            params.append(v)
+        
+        column_placeholders = ','.join(["%s" for v in columns])
+        columns = ','.join([v for v in columns])
+
+        self.query_params = params
+
+        self.sql = "INSERT INTO {}({}) VALUES({})".format(self.table_name,columns,column_placeholders)
+        
+        print (self.sql)
+        print (self.query_params)
+
+        return self.execute(self.sql,self.query_params).lastrowid
+
 
        
 

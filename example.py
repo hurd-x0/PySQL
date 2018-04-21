@@ -72,3 +72,12 @@ print (c.rowcount)
 
 
 
+""" TESt insert"""
+data={"state":"test","event_id":5,"operator":"mosoticom","msisdn":"0700","service_code":421,"message":"sample",
+      "link_id":"1234455","date_created":5434555,"time_created":23456,"country_id":10,"access_mode":"test"
+      }
+
+c = db.requests.insert(data)
+print (c)
+
+db.commit()
