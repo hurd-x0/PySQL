@@ -270,7 +270,7 @@ class PySQL:
     def filter(self,filter_data):
     
         """ 
-        Filters requests
+        Filters Requests
 
         #example full including or
 
@@ -317,11 +317,11 @@ class PySQL:
         
         self.filter(filter_data)
         self.order_by(order_by)
-        #self.__limit(page_size)
 
         results = self.fetch(limit = page_size)
-
-        return results
+        pagination_data = paginator_obj.get_pagination_data(results)
+      
+        return {"results":results,"pagination":pagination_data}
 
 
 

@@ -39,18 +39,13 @@ filter_data={
 #with joins
 paginator_obj = p 
 
-results   = db.requests.fields(['id','state','access_mode','event_id']
+data   = db.requests.fields(['id','state','access_mode','event_id']
                               ).inner_join('players',{"msisdn":"phone_number"},
                             related_fields=['country_code']).filter(filter_data).order_by(['state']).fetch_paginated(paginator_obj)
 
-
-results = [r for r in results]
-
-print (results)
-
-paginationd_data = p.get_pagination_data(results)
+print (data)
 
 
 
-print (paginationd_data)
+
 
