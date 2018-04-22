@@ -63,10 +63,7 @@ setup(
         #   5 - Production/Stable
         'Development Status :: 3 - Alpha',
 
-        # Indicate who your project is intended for
-        'Intended Audience :: Python Developers',
-        'Topic :: Software Development :: Database Tools',
-
+     
         # Pick your license as you wish
         'License :: OSI Approved :: MIT License',
 
