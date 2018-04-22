@@ -1,0 +1,7 @@
+README.md
+setup.py
+pysql.egg-info/PKG-INFO
+pysql.egg-info/SOURCES.txt
+pysql.egg-info/dependency_links.txt
+pysql.egg-info/requires.txt
+pysql.egg-info/top_level.txt

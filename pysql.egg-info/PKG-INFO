@@ -1,0 +1,19 @@
+Metadata-Version: 1.1
+Name: pysql
+Version: 1.2.1
+Summary: Python Library for making MySQL db queries
+Home-page: https://github.com/morfat/PySQL
+Author: Morfat Mosoti
+Author-email: morfatmosoti@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: pysql mysqlpackage pythonmysql mysqldb
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Python Developers
+Classifier: Topic :: Software Development :: Database Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
