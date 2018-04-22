@@ -1,6 +1,11 @@
 # PySQL
 Python library for making MySQL and Mariadb  Queries
 
+#Install 
+
+python setup.py install
+
+
 #How to use:
 1.Connect to dbms 
 

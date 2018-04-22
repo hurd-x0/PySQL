@@ -1,5 +1,5 @@
 Metadata-Version: 1.1
-Name: pysql
+Name: pysqldb
 Version: 1.2.1
 Summary: Python Library for making MySQL db queries
 Home-page: https://github.com/morfat/PySQL
