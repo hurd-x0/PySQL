@@ -124,7 +124,14 @@ class PySQL:
     
     def __set_where(self,where_sql):
         if self.where_sql:
-            self.where_sql = self.where_sql + " " + where_sql
+            #check if where starts with AND or OR 
+            where_sql = where_sql.strip()
+            if where_sql.startswith('OR') or where_sql.startswith("AND"):
+                self.where_sql = self.where_sql + " " + where_sql
+            else:
+                self.where_sql = self.where_sql + " AND " + where_sql
+                
+            
         else:
             self.where_sql = " WHERE {} ".format(where_sql)
 
@@ -298,6 +305,26 @@ class PySQL:
             self.__set_where(filters_qls)
        
         return self
+
+    def fetch_paginated(self,paginator_obj):
+        #receives paginator object
+
+        order_by = paginator_obj.get_order_by()
+
+        filter_data = paginator_obj.get_filter_data()
+        page_size = paginator_obj.page_size
+
+        
+        self.filter(filter_data)
+        self.order_by(order_by)
+        #self.__limit(page_size)
+
+        results = self.fetch(limit = page_size)
+
+        return results
+
+
+
     
     def __limit(self,limit):
         if limit:
@@ -322,7 +349,7 @@ class PySQL:
         order_by_sql = ','.join([self.__get_order_by_text(v) for v in order_by_fields])
 
         if self.order_by_sql:
-            self.order_by_sql = self.order_by_sql + order_by_sql
+            self.order_by_sql = self.order_by_sql + ' , ' +  order_by_sql
         else:
             self.order_by_sql = " ORDER BY " + order_by_sql
         return self
