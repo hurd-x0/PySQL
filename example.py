@@ -1,13 +1,8 @@
 from pysql import PySQL
 
-DATABASE ={
-        'ENGINE': 'mysql',
-        'NAME': 'mcheza_bet',
-        'USER': 'root',
-        'PASSWORD': '2017isgood.r',
-        'HOST': '127.0.0.1',
-        'PORT': 3306
-    }
+from local_settings import DATABASE
+
+
 
 
 

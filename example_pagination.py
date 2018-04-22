@@ -3,21 +3,14 @@ from paginator import Paginator
 
 from pysql import PySQL
 
-DATABASE ={
-        'ENGINE': 'mysql',
-        'NAME': 'mcheza_bet',
-        'USER': 'root',
-        'PASSWORD': '2017isgood.r',
-        'HOST': '127.0.0.1',
-        'PORT': 3306
-    }
+from local_settings import DATABASE
 
 
 
 db = PySQL(DATABASE.get('USER'),DATABASE.get('PASSWORD'),DATABASE.get('NAME'),DATABASE.get('HOST'),DATABASE.get('PORT'))
 
 
-p = Paginator(max_page_size=100,url='http://localhost:8040/v1/sms?dir=prev&last_seen=48&page=3&page_size=20',page_number=2,page_size=4,
+p = Paginator(max_page_size=100,url='http://localhost:8000/users?dir=prev&last_seen=48&page=3&page_size=20',page_number=2,page_size=4,
               last_seen=49,direction='prev')
 
 
